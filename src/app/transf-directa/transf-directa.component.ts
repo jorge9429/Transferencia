@@ -9,6 +9,8 @@ import { Prestamo } from './domain/prestamo';
 import { NgxSoapService, ISoapMethod, Client, ISoapMethodResponse } from 'ngx-soap';
 
 import { SelectItem } from 'primeng/api';
+import { MatSnackBar } from '@angular/material';
+import { FlashMessagesService } from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-transf-directa',
@@ -52,13 +54,7 @@ export class TransfDirectaComponent implements OnInit {
   transfer: any = [];
   tdirecta: transfDir[] = [];
 
-  constructor(private cuentasService: CuentasService, private soap: NgxSoapService) {
-    this.soap.createClient('assets/transfdirecta.wsdl')
-      .then(client => {
-        console.log('Client', client);
-        this.client = client;
-      })
-      .catch(err => console.log('Error', err));
+  constructor(private cuentasService: CuentasService, public snackBar: MatSnackBar, public flashMessages: FlashMessagesService) {
     this.saldo = [
       { label: 'Audi', value: 'Audi' },
       { label: 'BMW', value: 'BMW' },
@@ -73,22 +69,7 @@ export class TransfDirectaComponent implements OnInit {
     ];
   }
 
-  subtract() {
-    this.loading = true;
-    const body = {
-      intA: this.intA,
-      intB: this.intB
-    };
-    (<any>this.client).Subtract(body).subscribe(
-      (res: ISoapMethodResponse) => {
-        console.log('method response', res);
-        this.xmlResponse = res.xml;
-        this.message = res.result.SubtractResult;
-        this.loading = false;
-      },
-      err => console.log(err)
-    );
-  }
+
   ngOnInit() {
     this.obtenerListaCuentas();
     this.obtenerListaPrestamos();
@@ -96,8 +77,16 @@ export class TransfDirectaComponent implements OnInit {
   }
 
   btnAceptar() {
-    this.cuentasService.getTransferencia(this.cta_org, this.cta_dest, this.monto).subscribe((data)=>{
-      console.log("DATA=:>",data);
+    this.cuentasService.getTransferencia(this.cta_org, this.cta_dest, this.monto).subscribe(res => {
+      console.log("RES", res);
+      this.snackBar.open("Transaccion registrada con éxito", "ACEPTAR", {
+        duration: 3000,
+      });
+    }, err => {
+      console.log("err", err);
+      this.snackBar.open("Error, Verifique los datos porfavor", "ACEPTAR", {
+        duration: 3000,
+      });
     });
   }
 

@@ -108,6 +108,11 @@ import { TransfHistorialComponent } from './transf-historial/transf-historial.co
 import { TransfOtrosComponent } from './transf-otros/transf-otros.component';
 
 import { NgxSoapModule } from 'ngx-soap';
+import {MatSnackBarModule} from '@angular/material';  
+import {FlashMessagesModule} from 'angular2-flash-messages'  ;
+import {FlashMessagesService} from 'angular2-flash-messages';
+
+
 
 
 import { CuentasService } from './pos-consolidada/service/cuentas.service';
@@ -185,7 +190,9 @@ import { CuentasService } from './pos-consolidada/service/cuentas.service';
         TreeModule,
         TreeTableModule,
         VirtualScrollerModule,
-        NgxSoapModule
+        NgxSoapModule,
+        MatSnackBarModule,
+        FlashMessagesModule
     ],
     declarations: [
         AppComponent,
@@ -219,6 +226,7 @@ import { CuentasService } from './pos-consolidada/service/cuentas.service';
         TransfOtrosComponent
     ],
     providers: [
+        FlashMessagesService,
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         /*CarService, CountryService, EventService, NodeService, */CuentasService
     ],

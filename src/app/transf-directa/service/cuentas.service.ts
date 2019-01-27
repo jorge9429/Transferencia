@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 import { map, catchError, tap } from 'rxjs/operators';
+
+import {MatSnackBar} from '@angular/material';
+
 
 const endpointCuentas = '/ServicioCuenta/api/cuenta';
 const endpointPrestamos = '/ServicioPrestamo/api/prestamo';
@@ -16,7 +19,7 @@ const endpointObtTransfe = '/Modulo-Cuentas-Pll-web/api/transferencia/directa/';
 })
 export class CuentasService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
   private extractData(res: Response) {
     let body = res;
@@ -30,11 +33,24 @@ export class CuentasService {
 
   getTransferencia(origen: String, destino: String, monto: String) {
     return this.http.get(endpointObtTransfe + origen + "&" + destino + "&" + monto).pipe(
-      map(this.extractData));
+      map(this.extractData) );
+      /* tap(
+        resp => {
+          console.log("CORRECTITO", resp.headers.get('ReturnStatus'));
+          this.snackBar.open("Transferencia realizada con éxito", "ACEPTAR", {
+            duration: 3000,
+          });
+        }, err => {
+          console.log("ERRORSITO", err);
+          this.snackBar.open("Error, Verifique los datos porfavor", "ACEPTAR", {
+            duration: 3000,
+          });
+        }
+      ) */
   }
 
   getUnUsuario(): Observable<any> {
-    return this.http.get(transfDirecta).pipe(
+    return this.http.get(endpointUsuarioKYC).pipe(
       map(this.extractData));
   }
 
