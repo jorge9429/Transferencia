@@ -112,9 +112,6 @@ import {MatSnackBarModule} from '@angular/material';
 import {FlashMessagesModule} from 'angular2-flash-messages'  ;
 import {FlashMessagesService} from 'angular2-flash-messages';
 
-
-
-
 import { CuentasService } from './pos-consolidada/service/cuentas.service';
 
 @NgModule({
